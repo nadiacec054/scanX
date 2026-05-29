@@ -4,7 +4,6 @@
     <title>ScanX - Web Vulnerability Scanner</title>
 
     <style>
-
         *{
             margin:0;
             padding:0;
@@ -19,20 +18,22 @@
         }
 
         .container{
-            max-width:1000px;
+            max-width:1100px;
             margin:auto;
         }
 
         h1{
             text-align:center;
-            margin-bottom:20px;
+            margin-bottom:10px;
             color:#58a6ff;
+            font-size:42px;
         }
 
         .subtitle{
             text-align:center;
             color:#8b949e;
             margin-bottom:30px;
+            font-size:18px;
         }
 
         form{
@@ -43,16 +44,17 @@
 
         input[type=text]{
             flex:1;
-            padding:12px;
+            padding:14px;
             border:none;
             border-radius:8px;
             background:#161b22;
             color:white;
             font-size:16px;
+            outline:none;
         }
 
         button{
-            padding:12px 25px;
+            padding:14px 28px;
             border:none;
             border-radius:8px;
             background:#238636;
@@ -68,90 +70,164 @@
 
         .summary{
             background:#161b22;
-            padding:20px;
-            border-radius:12px;
+            padding:25px;
+            border-radius:14px;
             margin-bottom:25px;
             border:1px solid #30363d;
         }
 
+        .summary-grid{
+            display:grid;
+            grid-template-columns:1fr 300px;
+            gap:25px;
+            align-items:center;
+        }
+
         .risk-score{
-            font-size:32px;
+            font-size:36px;
             font-weight:bold;
             color:#58a6ff;
-            margin-top:10px;
+            margin-top:15px;
+        }
+
+        .risk-label{
+            color:#8b949e;
+            margin-top:8px;
+        }
+
+        .pie-chart{
+            width:230px;
+            height:230px;
+            border-radius:50%;
+            margin:auto;
+            background:
+                conic-gradient(
+                    #f85149 0deg calc(var(--high) * 3.6deg),
+                    #d29922 calc(var(--high) * 3.6deg) calc((var(--high) + var(--medium)) * 3.6deg),
+                    #3fb950 calc((var(--high) + var(--medium)) * 3.6deg) calc((var(--high) + var(--medium) + var(--low)) * 3.6deg),
+                    #58a6ff calc((var(--high) + var(--medium) + var(--low)) * 3.6deg) 360deg
+                );
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .pie-inner{
+            width:120px;
+            height:120px;
+            background:#161b22;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            font-weight:bold;
+            color:white;
+        }
+
+        .legend{
+            display:flex;
+            flex-wrap:wrap;
+            gap:15px;
+            margin-top:20px;
+        }
+
+        .legend-item{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#c9d1d9;
+        }
+
+        .dot{
+            width:12px;
+            height:12px;
+            border-radius:50%;
+        }
+
+        .red{ background:#f85149; }
+        .yellow{ background:#d29922; }
+        .green{ background:#3fb950; }
+        .blue{ background:#58a6ff; }
+
+        .download-btn{
+            display:inline-block;
+            margin-top:20px;
+            padding:12px 20px;
+            border-radius:8px;
+            background:#1f6feb;
+            color:white;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
+        .download-btn:hover{
+            background:#388bfd;
         }
 
         .card{
             background:#161b22;
             border-radius:12px;
-            padding:20px;
-            margin-bottom:15px;
-            border-left:6px solid gray;
+            padding:22px;
+            margin-bottom:18px;
+            border-left:7px solid #58a6ff;
+            border-top:1px solid #30363d;
+            border-right:1px solid #30363d;
+            border-bottom:1px solid #30363d;
         }
 
-        .high{
-            border-left-color:#f85149;
-        }
-
-        .medium{
-            border-left-color:#d29922;
-        }
-
-        .low{
-            border-left-color:#3fb950;
-        }
-
-        .info{
-            border-left-color:#58a6ff;
-        }
+        .high{ border-left-color:#f85149; }
+        .medium{ border-left-color:#d29922; }
+        .low{ border-left-color:#3fb950; }
+        .info{ border-left-color:#58a6ff; }
 
         .title{
-            font-size:20px;
+            font-size:22px;
             font-weight:bold;
-            margin-bottom:10px;
+            margin-bottom:12px;
         }
 
         .status{
-            margin-bottom:8px;
+            margin-bottom:10px;
+            font-size:16px;
         }
 
         .severity{
             display:inline-block;
-            padding:5px 10px;
+            padding:6px 12px;
             border-radius:20px;
-            font-size:12px;
+            font-size:13px;
             font-weight:bold;
-            margin-bottom:10px;
+            margin-bottom:12px;
         }
 
-        .sev-high{
-            background:#f85149;
-        }
-
-        .sev-medium{
-            background:#d29922;
-        }
-
-        .sev-low{
-            background:#238636;
-        }
-
-        .sev-info{
-            background:#58a6ff;
-        }
+        .sev-high{ background:#f85149; color:white; }
+        .sev-medium{ background:#d29922; color:white; }
+        .sev-low{ background:#238636; color:white; }
+        .sev-info{ background:#1f6feb; color:white; }
 
         .message{
             margin-top:10px;
             color:#c9d1d9;
+            line-height:1.5;
         }
 
         .fix{
             margin-top:10px;
             color:#7ee787;
+            line-height:1.5;
         }
 
-    </style>
+        @media(max-width:800px){
+            .summary-grid{
+                grid-template-columns:1fr;
+            }
 
+            form{
+                flex-direction:column;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -165,7 +241,6 @@
     </p>
 
     <form method="POST">
-
         <input
             type="text"
             name="url"
@@ -176,35 +251,96 @@
         <button type="submit">
             Scan
         </button>
-
     </form>
 
     {% if results %}
 
+    {% set total = counts.High + counts.Medium + counts.Low + counts.Info %}
+
+    {% if total > 0 %}
+        {% set high_percent = (counts.High / total) * 100 %}
+        {% set medium_percent = (counts.Medium / total) * 100 %}
+        {% set low_percent = (counts.Low / total) * 100 %}
+        {% set info_percent = (counts.Info / total) * 100 %}
+    {% else %}
+        {% set high_percent = 0 %}
+        {% set medium_percent = 0 %}
+        {% set low_percent = 0 %}
+        {% set info_percent = 100 %}
+    {% endif %}
+
     <div class="summary">
+        <div class="summary-grid">
 
-        <h2>Scan Summary</h2>
+            <div>
+                <h2>Scan Summary</h2>
 
-        <br>
+                <br>
 
-        <p>
-            <strong>Target:</strong>
-            {{ scanned_url }}
-        </p>
+                <p>
+                    <strong>Target:</strong>
+                    {{ scanned_url }}
+                </p>
 
-        <br>
+                <br>
 
-        <p>
-            <strong>Scan Time:</strong>
-            {{ scan_time }}
-        </p>
+                <p>
+                    <strong>Scan Time:</strong>
+                    {{ scan_time }}
+                </p>
 
-        <br>
+                <div class="risk-score">
+                    Risk Score: {{ risk_score }}/100
+                </div>
 
-        <div class="risk-score">
-            Risk Score: {{ risk_score }}/100
+                <p class="risk-label">
+                    Higher score means higher security risk.
+                </p>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="dot red"></span>
+                        High: {{ counts.High }}
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot yellow"></span>
+                        Medium: {{ counts.Medium }}
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot green"></span>
+                        Low: {{ counts.Low }}
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="dot blue"></span>
+                        Info: {{ counts.Info }}
+                    </div>
+                </div>
+
+                <a class="download-btn" href="/download_report/{{ scan_id }}">
+                    Download PDF Report
+                </a>
+            </div>
+
+            <div>
+                <div
+                    class="pie-chart"
+                    style="
+                        --high: {{ high_percent }};
+                        --medium: {{ medium_percent }};
+                        --low: {{ low_percent }};
+                        --info: {{ info_percent }};
+                    "
+                >
+                    <div class="pie-inner">
+                        Findings<br>{{ total }}
+                    </div>
+                </div>
+            </div>
+
         </div>
-
     </div>
 
     {% for result in results %}
