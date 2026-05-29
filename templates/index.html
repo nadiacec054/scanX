@@ -1,34 +1,264 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ScanX</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>ScanX - Web Vulnerability Scanner</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+            background:#0d1117;
+            color:white;
+            padding:30px;
+        }
+
+        .container{
+            max-width:1000px;
+            margin:auto;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:20px;
+            color:#58a6ff;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#8b949e;
+            margin-bottom:30px;
+        }
+
+        form{
+            display:flex;
+            gap:10px;
+            margin-bottom:30px;
+        }
+
+        input[type=text]{
+            flex:1;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            background:#161b22;
+            color:white;
+            font-size:16px;
+        }
+
+        button{
+            padding:12px 25px;
+            border:none;
+            border-radius:8px;
+            background:#238636;
+            color:white;
+            cursor:pointer;
+            font-size:16px;
+            font-weight:bold;
+        }
+
+        button:hover{
+            background:#2ea043;
+        }
+
+        .summary{
+            background:#161b22;
+            padding:20px;
+            border-radius:12px;
+            margin-bottom:25px;
+            border:1px solid #30363d;
+        }
+
+        .risk-score{
+            font-size:32px;
+            font-weight:bold;
+            color:#58a6ff;
+            margin-top:10px;
+        }
+
+        .card{
+            background:#161b22;
+            border-radius:12px;
+            padding:20px;
+            margin-bottom:15px;
+            border-left:6px solid gray;
+        }
+
+        .high{
+            border-left-color:#f85149;
+        }
+
+        .medium{
+            border-left-color:#d29922;
+        }
+
+        .low{
+            border-left-color:#3fb950;
+        }
+
+        .info{
+            border-left-color:#58a6ff;
+        }
+
+        .title{
+            font-size:20px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+
+        .status{
+            margin-bottom:8px;
+        }
+
+        .severity{
+            display:inline-block;
+            padding:5px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+
+        .sev-high{
+            background:#f85149;
+        }
+
+        .sev-medium{
+            background:#d29922;
+        }
+
+        .sev-low{
+            background:#238636;
+        }
+
+        .sev-info{
+            background:#58a6ff;
+        }
+
+        .message{
+            margin-top:10px;
+            color:#c9d1d9;
+        }
+
+        .fix{
+            margin-top:10px;
+            color:#7ee787;
+        }
+
+    </style>
+
 </head>
+
 <body>
 
 <div class="container">
-    <h1>ScanX</h1>
-    <p class="subtitle">Web Vulnerability Scanner</p>
+
+    <h1>🛡 ScanX</h1>
+
+    <p class="subtitle">
+        Web Vulnerability Scanner
+    </p>
 
     <form method="POST">
-        <input type="text" name="url" placeholder="Enter website URL" required>
-        <button type="submit">Scan</button>
+
+        <input
+            type="text"
+            name="url"
+            placeholder="Enter Website URL"
+            required
+        >
+
+        <button type="submit">
+            Scan
+        </button>
+
     </form>
 
     {% if results %}
-    <div class="results">
-        <h2>Results</h2>
 
-        {% for result in results %}
-        <div class="card {{ result.status.lower() }}">
-            <h3>{{ result.name }}</h3>
-            <p><strong>Status:</strong> {{ result.status }}</p>
-            <p>{{ result.message }}</p>
+    <div class="summary">
+
+        <h2>Scan Summary</h2>
+
+        <br>
+
+        <p>
+            <strong>Target:</strong>
+            {{ scanned_url }}
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Scan Time:</strong>
+            {{ scan_time }}
+        </p>
+
+        <br>
+
+        <div class="risk-score">
+            Risk Score: {{ risk_score }}/100
         </div>
-        {% endfor %}
 
     </div>
+
+    {% for result in results %}
+
+    <div class="card
+        {% if result.severity == 'High' %}
+            high
+        {% elif result.severity == 'Medium' %}
+            medium
+        {% elif result.severity == 'Low' %}
+            low
+        {% else %}
+            info
+        {% endif %}
+    ">
+
+        <div class="title">
+            {{ result.name }}
+        </div>
+
+        <div class="status">
+            Status: <strong>{{ result.status }}</strong>
+        </div>
+
+        <div class="severity
+            {% if result.severity == 'High' %}
+                sev-high
+            {% elif result.severity == 'Medium' %}
+                sev-medium
+            {% elif result.severity == 'Low' %}
+                sev-low
+            {% else %}
+                sev-info
+            {% endif %}
+        ">
+            {{ result.severity }}
+        </div>
+
+        <div class="message">
+            <strong>Details:</strong>
+            {{ result.message }}
+        </div>
+
+        <div class="fix">
+            <strong>Recommendation:</strong>
+            {{ result.fix }}
+        </div>
+
+    </div>
+
+    {% endfor %}
+
     {% endif %}
+
 </div>
 
 </body>
